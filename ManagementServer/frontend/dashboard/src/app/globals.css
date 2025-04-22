@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --text: #111827;
+  --nav-bg: #1f2937;
+  --nav-text: #ffffff;
+  --card-bg: #ffffff;
+  --card-text: #111827;
+  --hero-bg: linear-gradient(to bottom right, #fef2f2, #ffffff, #eef2ff);
+  --hero-title: #4338ca;
+  --hero-text: #4b5563;
+  --section-bg: #ffffff;
+  --section-alt-bg: #f9fafb;
+  --footer-bg: #1f2937;
+  --footer-text: #9ca3af;
+  --icon-color: #4f46e5;
+  --icon-hover: #4338ca;
+  --auth-card-border: #e5e7eb;
+  --auth-card-shadow: rgba(79, 70, 229, 0.05);
+  --auth-card-bg: #ffffff;
+  --auth-page-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --auth-page-pattern: radial-gradient(circle at 1px 1px, rgba(79, 70, 229, 0.05) 1px, transparent 0);
+  --input-border: #e5e7eb;
+  --input-focus: #4f46e5;
+  --input-shadow: rgba(79, 70, 229, 0.05);
+  --button-bg: #4f46e5;
+  --button-hover: #4338ca;
+  --button-shadow: rgba(79, 70, 229, 0.2);
+}
+
+.dark {
+  --background: #111827;
+  --text: #ffffff;
+  --nav-bg: #111827;
+  --nav-text: #ffffff;
+  --card-bg: #1f2937;
+  --card-text: #ffffff;
+  --hero-bg: linear-gradient(to bottom right, #1f2937, #111827, #1f2937);
+  --hero-title: #ffffff;
+  --hero-text: #d1d5db;
+  --section-bg: #111827;
+  --section-alt-bg: #111827;
+  --footer-bg: #000000;
+  --footer-text: #9ca3af;
+  --icon-color: #818cf8;
+  --icon-hover: #6366f1;
+  --auth-card-border: #374151;
+  --auth-card-shadow: rgba(129, 140, 248, 0.1);
+  --auth-card-bg: #1f2937;
+  --auth-page-bg: linear-gradient(135deg, #111827 0%, #1e1b4b 100%);
+  --auth-page-pattern: radial-gradient(circle at 1px 1px, rgba(129, 140, 248, 0.05) 1px, transparent 0);
+  --input-border: #374151;
+  --input-focus: #818cf8;
+  --input-shadow: rgba(129, 140, 248, 0.1);
+  --button-bg: #6366f1;
+  --button-hover: #4f46e5;
+  --button-shadow: rgba(129, 140, 248, 0.2);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+nav {
+  background-color: var(--nav-bg);
+  color: var(--nav-text);
+}
+
+.card {
+  background-color: var(--card-bg);
+  color: var(--card-text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Auth pages specific styles */
+.auth-page {
+  background: var(--auth-page-bg);
+  background-size: 100% 100%;
+  background-position: center;
+  position: relative;
+  min-height: 100vh;
+}
+
+.auth-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--auth-page-pattern);
+  background-size: 30px 30px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.auth-card {
+  background-color: var(--auth-card-bg);
+  border: 1px solid var(--auth-card-border);
+  box-shadow: 0 4px 6px -1px var(--auth-card-shadow), 0 2px 4px -1px var(--auth-card-shadow);
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+}
+
+.auth-card:hover {
+  box-shadow: 0 8px 12px -1px var(--auth-card-shadow), 0 4px 6px -1px var(--auth-card-shadow);
+  transform: translateY(-1px);
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  background-color: var(--auth-card-bg);
+  color: var(--text);
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px 0 var(--input-shadow);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px var(--input-shadow);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--button-bg);
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px var(--button-shadow);
+}
+
+.auth-button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px var(--button-shadow);
+}
+
+.auth-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--button-shadow);
+}
+
+.auth-link {
+  color: var(--button-bg);
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.auth-link:hover {
+  color: var(--button-hover);
+}
+
+/* Hero section */
+.hero-section {
+  background: var(--hero-bg);
+  transition: background 0.2s;
+}
+
+.hero-title {
+  color: var(--hero-title);
+}
+
+.hero-text {
+  color: var(--hero-text);
+}
+
+/* Sections */
+.section {
+  background-color: var(--section-bg);
+  transition: background-color 0.2s;
+}
+
+.section-alt {
+  background-color: var(--section-alt-bg);
+  transition: background-color 0.2s;
+}
+
+/* Footer */
+footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Icons */
+.icon {
+  color: var(--icon-color);
+  transition: color 0.2s;
+}
+
+.icon:hover {
+  color: var(--icon-hover);
+}

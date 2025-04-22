@@ -1,0 +1,9 @@
+FROM python:3.11
+ARG BACKEND_PORT
+ENV BACKEND_PORT=${BACKEND_PORT}
+WORKDIR /app
+COPY . /app
+RUN pip install --no-cache-dir -r requirements.txt
+
+# run the flask app when the container starts
+CMD python -m flask --app api.py run --host=0.0.0.0 --port=${BACKEND_PORT}

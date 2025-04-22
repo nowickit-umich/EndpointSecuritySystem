@@ -1,0 +1,11 @@
+FROM node:18
+WORKDIR /app
+COPY dashboard/package.json .
+COPY dashboard/package-lock.json .
+COPY dashboard/*.json .
+COPY dashboard/*.mjs .
+COPY dashboard/public/ .
+RUN npm install  
+COPY dashboard/src/ ./src
+RUN npm run build
+CMD ["npm", "run", "start"]
