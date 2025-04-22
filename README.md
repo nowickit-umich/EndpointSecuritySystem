@@ -1,11 +1,13 @@
 # Endpoint Security Monitoring System
 
-This project consists of two main components: the Monitoring Agent and the Management Server. The Monitoring Agent is installed on the devices you want to monitor. The Management server is installed on your organizations network infrastructure. Both Cloud and On-Premise servers are supported. 
+This project consists of two main components: the Monitoring Agent and the Management Server. The Monitoring Agent is deployed on the devices to be monitored, while the Management Server is integrated within your organization's network infrastructure. Both cloud-based and on-premises server deployment options are supported. 
 
-The system detects anomolous and potentially malicious behavior by intercepting all system calls and process infomation. The system calls for each process are compared to a per-program baseline system call profile to determine if unusual behavior is occuring (WIP). In addition, some system calls are subject to further analysis: the open/openat system call arguments are comapred to a per-program file access baseline. execve/execveat and network related system calls are analyzed in a similar manner(WIP).
+The system identifies anomalous and potentially malicious activity by monitoring and intercepting all system calls and modeling process state. System calls for each process are compared against a designated baseline profile for the respective program to detect any abnormal behavior (WIP). Additionally, certain system calls, such as open/openat, are analyzed in greater detail by comparing their arguments to a program-specific file access baseline. Similar analysis is applied to execve/execveat and network-related system calls (WIP).
 
 # System Architecture Overview
 ![archoverview](https://github.com/user-attachments/assets/6fccf3f0-63c6-41b9-86ce-6437a337d67f)
+
+
 
 
 # Monitoring Agent Overview
