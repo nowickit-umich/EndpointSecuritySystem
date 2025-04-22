@@ -1,8 +1,9 @@
 # Endpoint Security Monitoring System
 
-GRADER NOTE: Use the instructions provided in DEPLOY.md to setup a local deployment of this system. 
+This project consists of two main components: the Monitoring Agent and the Management Server. The Monitoring Agent is installed on the devices you want to monitor. The Management server is installed on your organizations network infrastructure. Both Cloud and On-Premise servers are supported. The system detects anomolous and potentially malicious behavior by intercepting all system calls and process infomation. The system calls for each process are compared to a per-program baseline system call profile to determine if unusual behavior is occuring (WIP). In addition, some system calls are subject to further analysis: the open/openat system call arguments are comapred to a per-program file access baseline. execve/execveat and network related system calls are analyzed in a similar manner(WIP).
 
-This project consists of two main components: the Monitoring Agent and the Management Server. The Monitoring Agent is installed on the devices you want to monitor. The Management server is installed on your organizations network infrastructure. Both Cloud and On-Premise servers are supported. 
+# System Architechture Overview
+
 
 # Monitoring Agent Overview
 The Monitoring Agent currently supports Fedora-40 systems. This can easily be extended to any linux kernel version greater than 5.8 in the future. The monitoring agent can be easily managed via systemd. 
