@@ -1,13 +1,30 @@
 # Endpoint Security Monitoring System
 
-This project consists of two main components: the Monitoring Agent and the Management Server. The Monitoring Agent is deployed on the devices to be monitored, while the Management Server is integrated within your organization's network infrastructure. Both cloud-based and on-premises server deployment options are supported. 
+This project provides a scalable, modular, and easy-to-deploy solution for monitoring endpoint activity and identifying anomalous or potentially malicious behavior. It is designed with flexibility in mind, supporting both cloud-based and on-premises deployment. The system consists of two primary components:
 
-The system identifies anomalous and potentially malicious activity by monitoring and intercepting all system calls and modeling process state. System calls for each process are compared against a designated baseline profile for the respective program to detect any abnormal behavior (WIP). Additionally, certain system calls, such as open/openat, are analyzed in greater detail by comparing their arguments to a program-specific file access baseline. Similar analysis is applied to execve/execveat and network-related system calls (WIP).
+ - Monitoring Agent - Installed on endpoints to capture system activity. Currently suports Linux systems running kernel version 5.8 and higher.
+
+ - Management Services - Operates within the organization's infrastructure, providing centralized visibility, analysis, and control.
+
+By monitoring and intercepting system calls, the system constructs a behavioral model of process activity. Each process is evaluated against a baseline profile to detect deviations indicative of abnormal behavior (WIP). Enhanced analysis is performed for specific system calls, such as:
+
+ - open/openat - Assessed against program-specific file access baselines.
+
+ - execve/execveat and network-related calls - Further analysis under development (WIP).
 
 # System Architecture Overview
-![archoverview](https://github.com/user-attachments/assets/6fccf3f0-63c6-41b9-86ce-6437a337d67f)
+![archoverview](https://github.com/user-attachments/assets/90573a24-020b-4fec-bbf7-1f622f1e1ca5)
 
 
+Each service is deployed in a separate Docker container to support future scalability. Despite this modular design, all services can be easily deployed on a single server using Docker Compose, which enables simplified orchestration and management through a single command.
+
+### Services:
+ - **Reverse Proxy**: Ensures secure and encrypted connections to all services. Capable of performing load balancing if the system is scaled across multiple servers.
+ - **Log Ingress**: Receives and parses raw logs from endpoints, then writes the processed data to the database.
+ - **Dashboard Web App**: Provides a management UI for adding new endpoints and viewing alerts.
+ - **Backend**: Provides data to the Dashboard.
+ - **Database**: Stores all persistent data, including endpoint identifiers, event logs, alert data, and user information.
+ - **Analysis**: Consumes event data from the database and performs analytical processing. Running analysis in a dedicated container allows multiple analysis services of varying complexity to be executed in parallel without degrading overall system performance.
 
 
 # Monitoring Agent Overview
