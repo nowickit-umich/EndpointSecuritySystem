@@ -13,11 +13,11 @@ The virtual machine must have access to the host machine network. A bridged adap
 
 2. Clone the GitHub repository:
 
-`git clone https://github.com/nowickit-umich/CIS376TermProject.git`
+`git clone https://github.com/nowickit-umich/EndpointSecuritySystem.git`
 
 3. Move into the ManagementServer Directory:
 
-`cd ./CIS376TermProject/ManagementServer/`
+`cd ./EndpointSecuritySystem/ManagementServer/`
 
 4. Start the services:
 
@@ -46,11 +46,11 @@ Once the fedora Linux virtual machine is running, **switch to the root user** an
 
 1. Use the following command to download the code:
 
-`git clone https://github.com/nowickit-umich/CIS376TermProject.git`
+`git clone https://github.com/nowickit-umich/EndpointSecuritySystem.git`
 
 2. Move to the MonitoringAgent directory:
 
-`cd ./CIS376TermProject/MonitoringAgent/`
+`cd ./EndpointSecuritySystem/MonitoringAgent/`
 
 3. Copy the agent configuration file which was previously downloaded in step 9 of the "Management Server Setup" to the `src` directory
 
