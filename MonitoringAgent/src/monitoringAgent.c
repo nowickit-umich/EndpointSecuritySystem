@@ -1,10 +1,8 @@
-
 //
 // eBPF loader program
 // loads the eBPF skeleton 
 //
 // reads events from shared ringbuffer and submits to log API
-
 
 #include <stdlib.h>
 #include <string.h>
@@ -30,8 +28,8 @@ static void handle_sigint(int sig) {
 }
 
 // buffer to collect events
-struct event* event_buffer;
-int event_count = 0;
+static struct event* event_buffer;
+static int event_count = 0;
 
 // Global config options, read from config file
 struct config{
@@ -55,27 +53,27 @@ void trim(char **str){
 // return -1 if the config is invalid
 int validate_config(){
 	if (strlen(config.api) == 0) {
-        fprintf(stderr, "Error: API endpoint is not set.\n");
+        fprintf(stderr, "Config Error: API endpoint is not set.\n");
         return -1;
     }
     if (strlen(config.key) == 0) {
-        fprintf(stderr, "Error: API key is not set.\n");
+        fprintf(stderr, "Config Error: API key is not set.\n");
         return -1;
     }
     if (strlen(config.name) == 0) {
-        fprintf(stderr, "Error: Endpoint name is not set.\n");
+        fprintf(stderr, "Config Error: Endpoint name is not set.\n");
         return -1;
     }
     if (strlen(config.id) == 0) {
-        fprintf(stderr, "Error: Endpoint ID is not set.\n");
+        fprintf(stderr, "Config Error: Endpoint ID is not set.\n");
         return -1;
     }
     if (config.buffer_size <= 16) {
-        fprintf(stderr, "Error: Invalid buffer size.\n");
+        fprintf(stderr, "Config Error: Invalid buffer size.\n");
         return -1;
     }
     if (config.batch_size <= 1) {
-        fprintf(stderr, "Error: Invalid batch size.\n");
+        fprintf(stderr, "Config Error: Invalid batch size.\n");
         return -1;
     }
     return 0;
@@ -116,15 +114,19 @@ int load_config(){
 
         if (strcmp(key, "api") == 0) {
             strncpy(config.api, value, sizeof(config.api) - 1);
+            config.api[sizeof(config.api) - 1] = '\0';
         } 
 		else if (strcmp(key, "key") == 0) {
             strncpy(config.key, value, sizeof(config.key) - 1);
+            config.key[sizeof(config.key) - 1] = '\0';
         } 
 		else if (strcmp(key, "name") == 0) {
             strncpy(config.name, value, sizeof(config.name) - 1);
+            config.key[sizeof(config.key) - 1] = '\0';
         } 
 		else if (strcmp(key, "id") == 0) {
             strncpy(config.id, value, sizeof(config.id) - 1);
+            config.key[sizeof(config.key) - 1] = '\0';
         } 
 		else if (strcmp(key, "buffer_size") == 0) {
             int s = atoi(value);
@@ -260,11 +262,13 @@ static int handle_event(void *ctx, void *data, size_t len) {
     struct event *e = (struct event*) data;
     // Add event to buffer
     if (event_count > config.buffer_size){
-		fprintf(stderr, "Error: event buffer overflow!\n");
+		fprintf(stderr, "Error: event buffer full! Dropping Events!\n");
 	}
-	event_buffer[event_count++] = *e;
+	else {
+        event_buffer[event_count++] = *e;
+    }
 
-    // If buffer is full, submit the events and reset the buffer
+    // submit the events and reset the buffer
     if (event_count >= config.batch_size) {
         if (submit_events(event_buffer, event_count) == 0) {
             // Reset buffer after successful submission
@@ -284,6 +288,10 @@ int main() {
 	}	
 	
 	event_buffer = malloc(config.buffer_size * sizeof(struct event));
+    if (event_buffer == NULL){
+        fprintf(stderr, "Error: Unable to allocate event buffer!\n");
+        return -1;
+    }
 
 	struct monitoringAgent_bpf *skel;
     struct ring_buffer *rb = NULL;
@@ -295,37 +303,36 @@ int main() {
     skel = monitoringAgent_bpf__open_and_load();
     if (!skel) {
         fprintf(stderr, "Failed to open/load BPF skeleton\n");
-        return 1;
+        return -1;
     }
 
     err = monitoringAgent_bpf__attach(skel);
     if (err) {
         fprintf(stderr, "Failed to attach BPF program\n");
         monitoringAgent_bpf__destroy(skel);
-        return 1;
+        return -1;
     }
 
     rb = ring_buffer__new(bpf_map__fd(skel->maps.rb), handle_event, NULL, NULL);
     if (!rb) {
         fprintf(stderr, "Failed to create ring buffer\n");
         monitoringAgent_bpf__destroy(skel);
-        return 1;
+        return -1;
     }
 
     printf("Tracing system calls.\n");
     while (!exit_flag) {
 
         err = ring_buffer__poll(rb, 1000);
-        //if (err == -EINTR) break;
         if (err < 0) {
-            fprintf(stderr, "Ring buffer poll error: %d\n", err);
+            fprintf(stderr, "Error: Ring buffer poll error: %d\n", err);
             break;
         }
     }
 
     ring_buffer__free(rb);
-
     monitoringAgent_bpf__destroy(skel);
+    free(event_buffer);
     return 0;
 }
 
