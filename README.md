@@ -1,6 +1,7 @@
 # Endpoint Security Monitoring System
 
 NOTE: Initially developed as a university software engineering group project: https://github.com/nowickit-umich/CIS376TermProject
+This project is INCOMPLETE: please see the Limitations Section below.
 
 This project provides a scalable, modular, and easy-to-deploy solution for monitoring endpoint activity and identifying anomalous or potentially malicious behavior. It is designed with flexibility in mind, supporting both cloud-based and on-premises deployment. The system consists of two primary components:
 
