@@ -1,7 +1,8 @@
 # Endpoint Security Monitoring System
 
 NOTE: Initially developed as a university software engineering group project: https://github.com/nowickit-umich/CIS376TermProject
-This project is INCOMPLETE: please see the Limitations Section below.
+
+### This project is INCOMPLETE: please see the Limitations Section below.
 
 This project provides a scalable, modular, and easy-to-deploy solution for monitoring endpoint activity and identifying anomalous or potentially malicious behavior. It is designed with flexibility in mind, supporting both cloud-based and on-premises deployment. The system consists of two primary components:
 
@@ -96,4 +97,43 @@ Start Server:
 docker compose up --build
 
 Network: Requires full access on ports `3000` and `5001`
+
+# LIMITATIONS
+This project was developed with tight time constraints. The focus of the project is developing a strong and scalable architecture and to demonstrate system call interception.
+
+### Current State:
+The management server is designed using a Docker-based container architecture, which supports modularity, portability, and ease of deployment. The system is composed of several core components: a frontend built with Next.js that provides the user interface; a backend implemented using a Flask API that serves as a bridge between the frontend and backend services; a MySQL database responsible for storing agent logs and alert data; and an analysis engine, developed in Python, which performs security detection and event analysis.
+
+Docker Compose is utilized to orchestrate these components, simplifying local development, testing, and providing consistent deployment across multiple environments. This containerized setup ensures that the system remains maintainable and scalable as it evolves.
+
+The dashboard offers real-time visibility into system events, allowing administrators to monitor security activity as it happens. The current architecture follows a client-server model, but its design is flexible and can be extended into a microservices architecture through Docker, offering further scalability and modular service management. 
+
+The project falls short with the implementation of anomaly detection lacking its intended strategy, the dashboard missing https encryption and inefficient authentication, system call tracing is only partially implemented and process modeling is not expanded upon due to kernel-space data encoding issues. More details below:
+
+
+### Neccessary Future Work:
+
+Event Analysis
+
+The system’s anomaly detection and alert mechanism is currently incomplete. The initial design aimed to incorporate a layered approach that includes predefined rules, statistical baselines, and machine learning algorithms to identify deviations from normal system behavior. This proved to be more complex than our initial estimates. More details about the analysis system limitations are included below in the "System Call decoding and Process Modeling" section. 
+
+Dashboard and API Encryption
+
+The web application and backend API are not currently encrypted with https. A reverse proxy service should be added to the docker system to ensure all connections are secure. One option the team explored was a service known as caddy. This service should make the addition of https simple to configure and deploy. The failure to enforce HTTPS with TLS can expose data in transit, including alerts, logs, and credentials, to interception or tampering by malicious actors. This exposure can lead to data breaches and compromise the confidentiality and integrity of sensitive endpoint and alert information.
+
+Dashboard Authentication
+
+The dashboard's current authentication implementation is incomplete and introduces several critical vulnerabilities. The use of default credentials is inherently insecure and exposes the system to unauthorized access during deployment. Additionally, storing passwords in plaintext, the absence of password complexity requirements, and the lack of session management significantly increase the risk of compromise. To improve security, several measures should be implemented. Passwords must be stored using secure hashing algorithms such as bcrypt, and account lockout mechanisms should be introduced to limit the number of failed login attempts. The session management functionality also needs improvement. The current system allows the login page to be bypassed by navigating directly to the dashboard URL. 
+
+System Call Collection and Log Submission
+
+The system call interception system was complex to build and several different technologies were tried during development. Auditd plugins, Kprobes, and eBPF based system call logging systems were implemented and tested. Each option has several limitations and ultimately eBPF was selected. eBPF allows for kernel code to be inserted into a running kernel and provides some stability and safety guarantees. It also defines an interface for accessing internal kernel tracepoints which are not directly accessible via normal kernel modules. Due to the multiple approaches tried, all the system call tracing specified in the requirements were not completed. Currently, only partial information is collected for most system calls. 
+
+System Call decoding and Process Modeling
+
+The system also needs significant work to improve the endpoint system modeling. The analysis system requires information such as the parent process program name, which is non-trivial to obtain in kernel space. The kernel data structures often only contain references that can only be decoded with information from user space. Many issues such as this were encountered, slowing development. Once the system call tracing system is fully complete with decoded values, a model of the endpoint system can be constructed within the analysis service. This model can be used to detect anomalous and potentially malicious behavior. One aspect of this model is a process tree, which is a representation of all processes and the relation to other processes on the endpoint. Significantly more work is required to complete this. 
+
+
+
+
 
